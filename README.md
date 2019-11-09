@@ -11,6 +11,7 @@
 
 1. Clone the repository.
 2. `cd` into the project folder and run the command `python manage.py migrate`. It will run all the migrations in your local database.
+3. Setup your virtual environment and run the command `pip install -r requirements.txt`. It will download all the required libraries for the project.
 
 ## Run the service
 
