@@ -40,7 +40,7 @@ def signup(request):
 	
 	except Exception as err:
 		traceback.print_exc()
-		logger.error('Error in signing up: %s', err.message)
+		logger.error('Error in signing up: %s', err)
 		
 		return Response(data={
 				'message': 'Sign up failed',
@@ -73,16 +73,21 @@ def login(request):
 	
 	except Exception as err:
 		traceback.print_exc()
-		logger.error('Error in login: %s', err.message)
+		logger.error('Error in login: %s', err)
 		
 		return Response(data={
 				'message': 'Internal Server Error',
 			}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 @api_view(http_method_names=['GET'])
 def get_ready_to_player_players(request, player_id):
 	try:	
 		player_1 = Player.objects.filter(id=player_id).last()
+		if player_1 is None:
+			return Response(data={
+				'data': []
+			}, status=status.HTTP_200_OK)
 		player_1.status = Player.READY_TO_PLAY
 		player_1.save()
 
@@ -95,11 +100,12 @@ def get_ready_to_player_players(request, player_id):
 	
 	except Exception as err:
 		traceback.print_exc()
-		logger.error('Error starting task: %s', err.message)
+		logger.error('Error starting task: %s', err)
 		
 		return Response(data={
 				'message': 'Internal Server Error',
 			}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(http_method_names=['PATCH'])
 def start_task(request):
@@ -128,7 +134,7 @@ def start_task(request):
 	
 	except Exception as err:
 		traceback.print_exc()
-		logger.error('Error entering task: %s', err.message)
+		logger.error('Error entering task: %s', err)
 		
 		return Response(data={
 				'message': 'Internal Server Error',
@@ -170,7 +176,7 @@ def end_task(request):
 	
 	except Exception as err:
 		traceback.print_exc()
-		logger.error('Error ending task: %s', err.message)
+		logger.error('Error ending task: %s', err)
 		
 		return Response(data={
 				'message': 'Internal Server Error',
@@ -192,7 +198,7 @@ def logout(request):
 	
 	except Exception as err:
 		traceback.print_exc()
-		logger.error('Error logging out: %s', err.message)
+		logger.error('Error logging out: %s', err)
 		
 		return Response(data={
 				'message': 'Internal Server Error',
