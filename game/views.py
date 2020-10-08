@@ -5,6 +5,7 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .serializers import PlayerSerializer
 
 from game.models import *
 from game.serializers import *
@@ -91,11 +92,13 @@ def get_ready_to_player_players(request, player_id):
 		player_1.status = Player.READY_TO_PLAY
 		player_1.save()
 
-		other_players = Player.objects.filter(~Q(id=player_id), status=Player.READY_TO_PLAY)
-		ready_to_play_players = serialize('json', other_players)
+		# other_players = Player.objects.filter(~Q(id=player_id), status=Player.READY_TO_PLAY)
+		other_players = Player.objects.all();
+		serializer = PlayerSerializer(other_players, many=True);
+		# ready_to_play_players = serialize('json', other_players)
 
 		return Response(data={
-				'data': ready_to_play_players,
+				'data': serializer.data,
 			}, status=status.HTTP_200_OK)
 	
 	except Exception as err:
